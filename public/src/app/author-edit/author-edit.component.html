@@ -1,3 +1,21 @@
-<p>
-  author-edit works!
-</p>
+<div class="u-container">
+  <h2 class="u-container__title">Edit Author</h2>
+  <form class="author__form">
+    <label for="author">Author Name:</label>
+    <input 
+      required
+      minlength='3'
+      name='author'
+      ngModel
+      #author="ngModel"
+      [(ngModel)]="editAuthor.name"
+      class="author__form--input" 
+      type="text">
+
+    <button 
+      (click)="onEdit()"
+      class="btn-primary"> Update Author
+    </button>
+  </form>
+
+</div>

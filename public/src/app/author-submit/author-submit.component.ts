@@ -29,10 +29,15 @@ export class AuthorSubmitComponent implements OnInit {
       return;
     }
     this._http.createAuthor(this.newAuthor).subscribe(response => {
-      console.log(response);
-      if (response['status'] == 201) { return this._router.navigate(['/'])}
-      else if (response['status'] == 418) { this.errors = response['errors'] })
-      else { return this._router.navigate(['/404']); }
+      if (response['status'] == 201) {
+        return this._router.navigate(['/']);
+      }
+      else if (response['status'] == 418) {
+        this.errors = response['errors'];
+      }
+      else { 
+        return this._router.navigate(['/404']); 
+      }
     })
   }
 

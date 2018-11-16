@@ -232,7 +232,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  author-edit works!\n</p>\n"
+module.exports = "<div class=\"u-container\">\n  <h2 class=\"u-container__title\">Edit Author</h2>\n  <form class=\"author__form\">\n    <label for=\"author\">Author Name:</label>\n    <input \n      required\n      minlength='3'\n      name='author'\n      ngModel\n      #author=\"ngModel\"\n      [(ngModel)]=\"editAuthor.name\"\n      class=\"author__form--input\" \n      type=\"text\">\n\n    <button \n      (click)=\"onEdit()\"\n      class=\"btn-primary\"> Update Author\n    </button>\n  </form>\n\n</div>\n"
 
 /***/ }),
 
@@ -258,6 +258,8 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthorEditComponent", function() { return AuthorEditComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -268,10 +270,51 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var AuthorEditComponent = /** @class */ (function () {
-    function AuthorEditComponent() {
+    function AuthorEditComponent(_http, _route, _router) {
+        this._http = _http;
+        this._route = _route;
+        this._router = _router;
+        this.authorId = '';
+        this.editAuthor = { name: '' };
+        this.errors = '';
     }
     AuthorEditComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._route.params.subscribe(function (params) {
+            _this.authorId = params['id'];
+            _this.getAuthor();
+        });
+    };
+    AuthorEditComponent.prototype.getAuthor = function () {
+        var _this = this;
+        this._http.getAuthor(this.authorId).subscribe(function (response) {
+            if (response['status'] == 200) {
+                _this.editAuthor = response['data'];
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+            else {
+                return _this._router.navigate(['/404']);
+            }
+        });
+    };
+    AuthorEditComponent.prototype.onEdit = function () {
+        var _this = this;
+        this._http.editAuthor(this.authorId, this.editAuthor).subscribe(function (response) {
+            if (response['status'] == 200) {
+                _this._router.navigate(['/']);
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+            else {
+                return _this._router.navigate(['/404']);
+            }
+        });
     };
     AuthorEditComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -279,7 +322,9 @@ var AuthorEditComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./author-edit.component.html */ "./src/app/author-edit/author-edit.component.html"),
             styles: [__webpack_require__(/*! ./author-edit.component.scss */ "./src/app/author-edit/author-edit.component.scss")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_2__["HttpService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
     ], AuthorEditComponent);
     return AuthorEditComponent;
 }());
@@ -295,7 +340,7 @@ var AuthorEditComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"author__row\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">Author Name</p>\n  </div>\n  <div class=\"author__col\">\n    <p class=\"author__header\">Actions Available</p>\n  </div>\n</div>\n<div class=\"author__row\" *ngFor=\"let author of authors\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">{{author.name}}</p>\n  </div>\n  <div class=\"author__col\">\n    <button class=\"author__btn\">Edit</button>\n    <button class=\"author__btn\">Delete</button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"author__row\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">Author Name</p>\n  </div>\n  <div class=\"author__col\">\n    <p class=\"author__header\">Actions Available</p>\n  </div>\n</div>\n<div class=\"author__row\" *ngFor=\"let author of authors\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">{{author.name}}</p>\n  </div>\n  <div class=\"author__col\">\n    <button \n      \n      class=\"author__btn\">View Quotes\n    </button>\n    <button \n      [routerLink]=\"['/authors/edit/', author._id]\"\n      class=\"author__btn\">Edit Author\n    </button>\n    <button \n      (click)=\"onDelete(author._id)\"\n      class=\"author__btn\">Delete Author\n    </button>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -321,7 +366,8 @@ module.exports = ".author__row {\n  display: flex; }\n\n.author__col {\n  width:
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthorListComponent", function() { return AuthorListComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -333,9 +379,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var AuthorListComponent = /** @class */ (function () {
-    function AuthorListComponent(_http) {
+    function AuthorListComponent(_http, _router) {
         this._http = _http;
+        this._router = _router;
         this.authors = [];
     }
     AuthorListComponent.prototype.ngOnInit = function () {
@@ -347,13 +395,28 @@ var AuthorListComponent = /** @class */ (function () {
             _this.authors = response['data'];
         });
     };
+    AuthorListComponent.prototype.onDelete = function (id) {
+        var _this = this;
+        this._http.deleteAuthor(id).subscribe(function (response) {
+            if (response['status'] == 200) {
+                _this.loadAuthors();
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+            else {
+                return _this._router.navigate(['/404']);
+            }
+        });
+    };
     AuthorListComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-author-list',
             template: __webpack_require__(/*! ./author-list.component.html */ "./src/app/author-list/author-list.component.html"),
             styles: [__webpack_require__(/*! ./author-list.component.scss */ "./src/app/author-list/author-list.component.scss")]
         }),
-        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]])
+        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_2__["HttpService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
     ], AuthorListComponent);
     return AuthorListComponent;
 }());
@@ -427,17 +490,16 @@ var AuthorSubmitComponent = /** @class */ (function () {
             return;
         }
         this._http.createAuthor(this.newAuthor).subscribe(function (response) {
-            console.log(response);
             if (response['status'] == 201) {
                 return _this._router.navigate(['/']);
             }
             else if (response['status'] == 418) {
                 _this.errors = response['errors'];
             }
+            else {
+                return _this._router.navigate(['/404']);
+            }
         });
-        {
-            return this._router.navigate(['/404']);
-        }
     };
     AuthorSubmitComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -546,7 +608,7 @@ var HttpService = /** @class */ (function () {
         this._http = _http;
     }
     HttpService.prototype.getAllAuthor = function () { return this._http.get('/api/authors'); };
-    HttpService.prototype.getAuthor = function (id) { return this._http.get('/api/authos/' + id); };
+    HttpService.prototype.getAuthor = function (id) { return this._http.get('/api/authors/' + id); };
     HttpService.prototype.createAuthor = function (newAuthor) { return this._http.post('/api/authors', newAuthor); };
     HttpService.prototype.deleteAuthor = function (id) { return this._http.delete('/api/authors/' + id); };
     HttpService.prototype.editAuthor = function (id, editedAuthor) {

@@ -17,10 +17,10 @@ app.use(bodyParser.json());
 const mongoose = require('mongoose');
 mongoose.connect(
   'mongodb://localhost:27017/quote_ranks',
-  {useNewUrlParser: true}
+  { useNewUrlParser: true }
 );
+mongoose.set('useFindAndModify', false)
 mongoose.connection.on('connected', () => console.log('connected to MongoDB'));
-// mongoose.Promise = global.Promise;
 const { Schema } = mongoose;
 
 //-----------------------//
@@ -73,16 +73,18 @@ const authorController = {
 
   edit: (req, res) => {
     const ID = req.params.id;
-    Author.findByIdAndUpdate( {_id: ID}, request.body, 
-      {upsert: true, new: true, runValidators: true}
+    const DATA = req.body;
+    Author.findOneAndUpdate( {_id: ID}, DATA,
+      { new: true, runValidators: true}
     )
-      .then(() => res.status(204).json( {status: res.statusCode} ))
+      .then((data) => res.status(200).json( {data: data, status: res.statusCode} ))
       .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   },
 
   delete: (req, res) => {
-    Author.deleteOne({ _id: request.params.id })
-      .then(() => res.status(204).json( {status: res.statusCode} ))
+    const ID = req.params.id;
+    Author.deleteOne({ _id: ID })
+      .then(data => res.status(200).json( {data: data, status: res.statusCode} ))
       .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   }
 };
@@ -101,4 +103,4 @@ app
 
 // - - - - = = = = Server Listener = = = = - - - - 
 const port = 1337;
-app.listen(port, ()=> console.log(`Express server listening on port ${port}`));
+app.listen(port, ()=> console.log(`Express server listening on port: ${port}`));

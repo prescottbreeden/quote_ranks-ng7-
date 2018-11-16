@@ -11,7 +11,17 @@
     <p class="author__header">{{author.name}}</p>
   </div>
   <div class="author__col">
-    <button class="author__btn">Edit</button>
-    <button class="author__btn">Delete</button>
+    <button 
+      
+      class="author__btn">View Quotes
+    </button>
+    <button 
+      [routerLink]="['/authors/edit/', author._id]"
+      class="author__btn">Edit Author
+    </button>
+    <button 
+      (click)="onDelete(author._id)"
+      class="author__btn">Delete Author
+    </button>
   </div>
 </div>

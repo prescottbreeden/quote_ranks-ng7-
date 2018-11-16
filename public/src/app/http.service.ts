@@ -10,7 +10,7 @@ export class HttpService {
 
   getAllAuthor() { return this._http.get('/api/authors'); }
 
-  getAuthor(id: string) { return this._http.get('/api/authos/' + id); }
+  getAuthor(id: string) { return this._http.get('/api/authors/' + id); }
 
   createAuthor(newAuthor) { return this._http.post('/api/authors', newAuthor); }
 
