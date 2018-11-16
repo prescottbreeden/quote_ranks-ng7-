@@ -2,6 +2,7 @@
 
 // express
 const express = require('express');
+const path = require('path');
 const app = express();
 
 // body parser
@@ -14,9 +15,12 @@ app.use(bodyParser.json());
 
 // - - - - = = = = Model = = = = - - - - //
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/quote_ranks');
+mongoose.connect(
+  'mongodb://localhost:27017/quote_ranks',
+  {useNewUrlParser: true}
+);
 mongoose.connection.on('connected', () => console.log('connected to MongoDB'));
-mongoose.Promise = global.Promise;
+// mongoose.Promise = global.Promise;
 const { Schema } = mongoose;
 
 //-----------------------//
@@ -45,59 +49,55 @@ const Author = mongoose.model('Author', authorSchema);
 
 // - - - - = = = = Controller = = = = - - - - 
 const authorController = {
-  index: (request, response) => {
+  getAll: (req, res) => {
     Author.find()
-      .then(authors => response.json( {message: "success", data: authors} ))
-      .catch(error => response.json( {message: "error", errors: error } ));
+      .then(data => res.status(200).json( {data: data, status: res.statusCode} ))
+      .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   },
 
-  find: (request, response) => {
-    Author.find({name: request.params.name})
-      .then(author => response.json( {message: "success", data: author} ))
-      .catch(error => response.json( {message: "error", errors: error}));
+  getOne: (req, res) => {
+    const ID = req.params.id;
+    Author.findOne( {_id: ID} )
+      .then(data => res.status(200).json( {data: data, status: res.statusCode} ))
+      .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   },
 
-  getOne: (request, response) => {
-    Author.findOne({_id: request.params.id})
-      .then(author => response.json( {message: "success", data: author} ))
-      .catch(error => response.json( {message: "error", errors: error}));
-  },
-
-  create: (request, response) => {
+  create: (req, res) => {
     const newAuthor = new Author({
-      name: request.body.name
-    })
+      name: req.body.name
+    });
     Author.create(newAuthor)
-      .then(author => response.json( {message: "success", data: author} ))
-      .catch(error => response.json( {message: "error", errors: error} ));
+      .then(data => res.status(201).json( {data: data, status: res.statusCode} ))
+      .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   },
 
-  edit: (request, response) => {
-    Author.findByIdAndUpdate(
-      { _id: request.params.id },
-      request.body, 
-      { upsert: true, new: true, runValidators: true }
+  edit: (req, res) => {
+    const ID = req.params.id;
+    Author.findByIdAndUpdate( {_id: ID}, request.body, 
+      {upsert: true, new: true, runValidators: true}
     )
-      .then(author => response.json( {message: "success", data: author} ))
-      .catch(error => response.json( {message: "error", errors: error} ));
+      .then(() => res.status(204).json( {status: res.statusCode} ))
+      .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   },
 
-  delete: (request, response) => {
+  delete: (req, res) => {
     Author.deleteOne({ _id: request.params.id })
-      .then(author => response.json( {message: "success", data: author} ))
-      .catch(error => response.json( {message: "error", errors: error} ));
+      .then(() => res.status(204).json( {status: res.statusCode} ))
+      .catch(err => res.status(418).json( {error: err, status: res.statusCode} ));
   }
 };
 
 
 // - - - - = = = = Routes = = = = - - - - 
 app 
-  .get('/api/authors', authorController.index)
-  .post('/api/authors', authorController.create)
+  .get('/api/authors', authorController.getAll)
   .get('/api/authors/:id', authorController.getOne)
-  .get('/api/authors/:name', authorController.find)
+  .post('/api/authors', authorController.create)
   .put('/api/authors/:id', authorController.edit)
   .delete('/api/authors/:id', authorController.delete)
+  .all('*', (req, res) => {
+    res.sendFile(path.resolve("./public/dist/public/index.html"))
+  })
 
 // - - - - = = = = Server Listener = = = = - - - - 
 const port = 1337;

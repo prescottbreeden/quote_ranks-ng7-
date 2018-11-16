@@ -1,3 +1,23 @@
-<p>
-  author-submit works!
-</p>
+<div class="u-container">
+  <h2 class="u-container__title">Add New Author</h2>
+  <form class="author__form">
+    <label for="author">Author Name:</label>
+    <input 
+      required
+      minlength='3'
+      name='author'
+      ngModel
+      #author="ngModel"
+      [(ngModel)]="newAuthor.name"
+      class="author__form--input"
+      type="text">
+
+    <button 
+      (click)="onCreate()"
+      class="btn-primary"> Save Author
+    </button>
+  </form>
+  <div class="u-error">
+    <p class="u-error__msg">{{errors}}</p>
+  </div>
+</div>

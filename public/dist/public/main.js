@@ -40,6 +40,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _author_submit_author_submit_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./author-submit/author-submit.component */ "./src/app/author-submit/author-submit.component.ts");
 /* harmony import */ var _quote_edit_quote_edit_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./quote-edit/quote-edit.component */ "./src/app/quote-edit/quote-edit.component.ts");
 /* harmony import */ var _quote_list_quote_list_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./quote-list/quote-list.component */ "./src/app/quote-list/quote-list.component.ts");
+/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -53,12 +54,14 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var routes = [
     { path: '', component: _author_list_author_list_component__WEBPACK_IMPORTED_MODULE_3__["AuthorListComponent"] },
     { path: 'authors/new', component: _author_submit_author_submit_component__WEBPACK_IMPORTED_MODULE_4__["AuthorSubmitComponent"] },
     { path: 'authors/edit/:id', component: _author_edit_author_edit_component__WEBPACK_IMPORTED_MODULE_2__["AuthorEditComponent"] },
     { path: 'authors/quotes/:id', component: _quote_list_quote_list_component__WEBPACK_IMPORTED_MODULE_6__["QuoteListComponent"] },
-    { path: 'authors/edit/:id/:idx', component: _quote_edit_quote_edit_component__WEBPACK_IMPORTED_MODULE_5__["QuoteEditComponent"] }
+    { path: 'authors/edit/:id/:idx', component: _quote_edit_quote_edit_component__WEBPACK_IMPORTED_MODULE_5__["QuoteEditComponent"] },
+    { path: '**', component: _error_error_component__WEBPACK_IMPORTED_MODULE_7__["ErrorComponent"] }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -170,12 +173,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _author_submit_author_submit_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./author-submit/author-submit.component */ "./src/app/author-submit/author-submit.component.ts");
 /* harmony import */ var _quote_edit_quote_edit_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./quote-edit/quote-edit.component */ "./src/app/quote-edit/quote-edit.component.ts");
 /* harmony import */ var _quote_list_quote_list_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./quote-list/quote-list.component */ "./src/app/quote-list/quote-list.component.ts");
+/* harmony import */ var _error_error_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./error/error.component */ "./src/app/error/error.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -199,7 +204,8 @@ var AppModule = /** @class */ (function () {
                 _author_list_author_list_component__WEBPACK_IMPORTED_MODULE_8__["AuthorListComponent"],
                 _author_submit_author_submit_component__WEBPACK_IMPORTED_MODULE_9__["AuthorSubmitComponent"],
                 _quote_edit_quote_edit_component__WEBPACK_IMPORTED_MODULE_10__["QuoteEditComponent"],
-                _quote_list_quote_list_component__WEBPACK_IMPORTED_MODULE_11__["QuoteListComponent"]
+                _quote_list_quote_list_component__WEBPACK_IMPORTED_MODULE_11__["QuoteListComponent"],
+                _error_error_component__WEBPACK_IMPORTED_MODULE_12__["ErrorComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
@@ -289,7 +295,7 @@ var AuthorEditComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"author__row\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">Author Name</p>\n  </div>\n  <div class=\"author__col\">\n    <p class=\"author__header\">Actions Available</p>\n  </div>\n</div>\n<div class=\"author__row\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">Name</p>\n  </div>\n  <div class=\"author__col\">\n    <p class=\"author__header\">Actions</p>\n  </div>\n</div>\n"
+module.exports = "<div class=\"author__row\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">Author Name</p>\n  </div>\n  <div class=\"author__col\">\n    <p class=\"author__header\">Actions Available</p>\n  </div>\n</div>\n<div class=\"author__row\" *ngFor=\"let author of authors\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">{{author.name}}</p>\n  </div>\n  <div class=\"author__col\">\n    <button class=\"author__btn\">Edit</button>\n    <button class=\"author__btn\">Delete</button>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -315,6 +321,7 @@ module.exports = ".author__row {\n  display: flex; }\n\n.author__col {\n  width:
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthorListComponent", function() { return AuthorListComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -325,10 +332,20 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
 var AuthorListComponent = /** @class */ (function () {
-    function AuthorListComponent() {
+    function AuthorListComponent(_http) {
+        this._http = _http;
+        this.authors = [];
     }
     AuthorListComponent.prototype.ngOnInit = function () {
+        this.loadAuthors();
+    };
+    AuthorListComponent.prototype.loadAuthors = function () {
+        var _this = this;
+        this._http.getAllAuthor().subscribe(function (response) {
+            _this.authors = response['data'];
+        });
     };
     AuthorListComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -336,7 +353,7 @@ var AuthorListComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./author-list.component.html */ "./src/app/author-list/author-list.component.html"),
             styles: [__webpack_require__(/*! ./author-list.component.scss */ "./src/app/author-list/author-list.component.scss")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]])
     ], AuthorListComponent);
     return AuthorListComponent;
 }());
@@ -352,7 +369,7 @@ var AuthorListComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  author-submit works!\n</p>\n"
+module.exports = "<div class=\"u-container\">\n  <h2 class=\"u-container__title\">Add New Author</h2>\n  <form class=\"author__form\">\n    <label for=\"author\">Author Name:</label>\n    <input \n      required\n      minlength='3'\n      name='author'\n      ngModel\n      #author=\"ngModel\"\n      [(ngModel)]=\"newAuthor.name\"\n      class=\"author__form--input\"\n      type=\"text\">\n\n    <button \n      (click)=\"onCreate()\"\n      class=\"btn-primary\"> Save Author\n    </button>\n  </form>\n  <div class=\"u-error\">\n    <p class=\"u-error__msg\">{{errors}}</p>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -378,6 +395,8 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthorSubmitComponent", function() { return AuthorSubmitComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -388,10 +407,37 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var AuthorSubmitComponent = /** @class */ (function () {
-    function AuthorSubmitComponent() {
+    function AuthorSubmitComponent(_http, _router) {
+        this._http = _http;
+        this._router = _router;
+        this.newAuthor = {
+            name: ''
+        };
+        this.errors = '';
     }
     AuthorSubmitComponent.prototype.ngOnInit = function () {
+    };
+    AuthorSubmitComponent.prototype.onCreate = function () {
+        var _this = this;
+        if (this.newAuthor.name.length < 3) {
+            this.errors = 'Author names must be longer than 3 characters';
+            return;
+        }
+        this._http.createAuthor(this.newAuthor).subscribe(function (response) {
+            console.log(response);
+            if (response['status'] == 201) {
+                return _this._router.navigate(['/']);
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+        });
+        {
+            return this._router.navigate(['/404']);
+        }
     };
     AuthorSubmitComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -399,9 +445,73 @@ var AuthorSubmitComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./author-submit.component.html */ "./src/app/author-submit/author-submit.component.html"),
             styles: [__webpack_require__(/*! ./author-submit.component.scss */ "./src/app/author-submit/author-submit.component.scss")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], AuthorSubmitComponent);
     return AuthorSubmitComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/error/error.component.html":
+/*!********************************************!*\
+  !*** ./src/app/error/error.component.html ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "ERROR 404: something went horribly wrong...\n\nAbandon hope!\n"
+
+/***/ }),
+
+/***/ "./src/app/error/error.component.scss":
+/*!********************************************!*\
+  !*** ./src/app/error/error.component.scss ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2Vycm9yL2Vycm9yLmNvbXBvbmVudC5zY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/error/error.component.ts":
+/*!******************************************!*\
+  !*** ./src/app/error/error.component.ts ***!
+  \******************************************/
+/*! exports provided: ErrorComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ErrorComponent", function() { return ErrorComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var ErrorComponent = /** @class */ (function () {
+    function ErrorComponent() {
+    }
+    ErrorComponent.prototype.ngOnInit = function () {
+    };
+    ErrorComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'app-error',
+            template: __webpack_require__(/*! ./error.component.html */ "./src/app/error/error.component.html"),
+            styles: [__webpack_require__(/*! ./error.component.scss */ "./src/app/error/error.component.scss")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], ErrorComponent);
+    return ErrorComponent;
 }());
 
 

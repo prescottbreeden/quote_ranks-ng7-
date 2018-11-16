@@ -11,6 +11,7 @@ import { AuthorListComponent } from './author-list/author-list.component';
 import { AuthorSubmitComponent } from './author-submit/author-submit.component';
 import { QuoteEditComponent } from './quote-edit/quote-edit.component';
 import { QuoteListComponent } from './quote-list/quote-list.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { QuoteListComponent } from './quote-list/quote-list.component';
     AuthorListComponent,
     AuthorSubmitComponent,
     QuoteEditComponent,
-    QuoteListComponent
+    QuoteListComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

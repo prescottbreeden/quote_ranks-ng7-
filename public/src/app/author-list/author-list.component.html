@@ -6,11 +6,12 @@
     <p class="author__header">Actions Available</p>
   </div>
 </div>
-<div class="author__row">
+<div class="author__row" *ngFor="let author of authors">
   <div class="author__col">
-    <p class="author__header">Name</p>
+    <p class="author__header">{{author.name}}</p>
   </div>
   <div class="author__col">
-    <p class="author__header">Actions</p>
+    <button class="author__btn">Edit</button>
+    <button class="author__btn">Delete</button>
   </div>
 </div>
