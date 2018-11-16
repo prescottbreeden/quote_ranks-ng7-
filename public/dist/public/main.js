@@ -285,10 +285,10 @@ var AuthorEditComponent = /** @class */ (function () {
         var _this = this;
         this._route.params.subscribe(function (params) {
             _this.authorId = params['id'];
-            _this.getAuthor();
+            _this.loadAuthor();
         });
     };
-    AuthorEditComponent.prototype.getAuthor = function () {
+    AuthorEditComponent.prototype.loadAuthor = function () {
         var _this = this;
         this._http.getAuthor(this.authorId).subscribe(function (response) {
             if (response['status'] == 200) {
@@ -340,7 +340,7 @@ var AuthorEditComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"author__row\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">Author Name</p>\n  </div>\n  <div class=\"author__col\">\n    <p class=\"author__header\">Actions Available</p>\n  </div>\n</div>\n<div class=\"author__row\" *ngFor=\"let author of authors\">\n  <div class=\"author__col\">\n    <p class=\"author__header\">{{author.name}}</p>\n  </div>\n  <div class=\"author__col\">\n    <button \n      \n      class=\"author__btn\">View Quotes\n    </button>\n    <button \n      [routerLink]=\"['/authors/edit/', author._id]\"\n      class=\"author__btn\">Edit Author\n    </button>\n    <button \n      (click)=\"onDelete(author._id)\"\n      class=\"author__btn\">Delete Author\n    </button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"u-container\">\n  <div class=\"author__row\">\n    <div class=\"author__col\">\n      <p class=\"author__header\">Author Name</p>\n    </div>\n    <div class=\"author__col\">\n      <p class=\"author__header\">Actions Available</p>\n    </div>\n  </div>\n  <div class=\"author__row\" *ngFor=\"let author of authors\">\n    <div class=\"author__col\">\n      <p class=\"author__header\">{{author.name}}</p>\n    </div>\n    <div class=\"author__col\">\n      <button \n        [routerLink]=\"['/authors/quotes/', author._id]\" \n        class=\"author__btn\">View Quotes\n      </button>\n      <button \n        [routerLink]=\"['/authors/edit/', author._id]\"\n        class=\"author__btn\">Edit Author\n      </button>\n      <button \n        (click)=\"onDelete(author._id)\"\n        class=\"author__btn\">Delete Author\n      </button>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -697,7 +697,7 @@ var QuoteEditComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  quote-list works!\n</p>\n"
+module.exports = "<div class=\"u-container\">\n  {{ author.name }}'s quotes...'\n  <div class=\"author__row\" *ngFor=\"let quote of author.quotes; let i = index\">\n    {{ quote.content }}\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -723,6 +723,8 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QuoteListComponent", function() { return QuoteListComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -733,10 +735,67 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var QuoteListComponent = /** @class */ (function () {
-    function QuoteListComponent() {
+    function QuoteListComponent(_http, _route, _router) {
+        this._http = _http;
+        this._route = _route;
+        this._router = _router;
+        this.addQuote = false;
+        this.errors = '';
+        this.button = 'Add a Quote';
+        this.content = '';
     }
     QuoteListComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._route.params.subscribe(function (params) {
+            _this.authorId = params['id'];
+            _this.loadAuthor();
+        });
+    };
+    QuoteListComponent.prototype.loadAuthor = function () {
+        var _this = this;
+        this._http.getAuthor(this.authorId).subscribe(function (response) {
+            if (response['status'] == 200) {
+                _this.author = response['data'];
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+            else {
+                return _this._router.navigate(['/404']);
+            }
+        });
+    };
+    QuoteListComponent.prototype.onAddQuote = function () {
+        var _this = this;
+        this._http.editAuthor(this.authorId, { $push: { quotes: { content: this.content } } }).subscribe(function (response) {
+            if (response['status'] == 200) {
+                _this._router.navigate(['/']);
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+            else {
+                return _this._router.navigate(['/404']);
+            }
+        });
+    };
+    QuoteListComponent.prototype.onDeleteQuote = function (index) {
+        var _this = this;
+        this.author.quotes.splice(index, 1);
+        this._http.editAuthor(this.authorId, this.author).subscribe(function (response) {
+            if (response['status'] == 200) {
+                _this.loadAuthor();
+            }
+            else if (response['status'] == 418) {
+                _this.errors = response['errors'];
+            }
+            else {
+                return _this._router.navigate(['/404']);
+            }
+        });
     };
     QuoteListComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -744,7 +803,9 @@ var QuoteListComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./quote-list.component.html */ "./src/app/quote-list/quote-list.component.html"),
             styles: [__webpack_require__(/*! ./quote-list.component.scss */ "./src/app/quote-list/quote-list.component.scss")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], QuoteListComponent);
     return QuoteListComponent;
 }());

@@ -1,27 +1,29 @@
-<div class="author__row">
-  <div class="author__col">
-    <p class="author__header">Author Name</p>
+<div class="u-container">
+  <div class="author__row">
+    <div class="author__col">
+      <p class="author__header">Author Name</p>
+    </div>
+    <div class="author__col">
+      <p class="author__header">Actions Available</p>
+    </div>
   </div>
-  <div class="author__col">
-    <p class="author__header">Actions Available</p>
-  </div>
-</div>
-<div class="author__row" *ngFor="let author of authors">
-  <div class="author__col">
-    <p class="author__header">{{author.name}}</p>
-  </div>
-  <div class="author__col">
-    <button 
-      
-      class="author__btn">View Quotes
-    </button>
-    <button 
-      [routerLink]="['/authors/edit/', author._id]"
-      class="author__btn">Edit Author
-    </button>
-    <button 
-      (click)="onDelete(author._id)"
-      class="author__btn">Delete Author
-    </button>
+  <div class="author__row" *ngFor="let author of authors">
+    <div class="author__col">
+      <p class="author__header">{{author.name}}</p>
+    </div>
+    <div class="author__col">
+      <button 
+        [routerLink]="['/authors/quotes/', author._id]" 
+        class="author__btn">View Quotes
+      </button>
+      <button 
+        [routerLink]="['/authors/edit/', author._id]"
+        class="author__btn">Edit Author
+      </button>
+      <button 
+        (click)="onDelete(author._id)"
+        class="author__btn">Delete Author
+      </button>
+    </div>
   </div>
 </div>

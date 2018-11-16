@@ -1,3 +1,6 @@
-<p>
-  quote-list works!
-</p>
+<div class="u-container">
+  {{ author.name }}'s quotes...'
+  <div class="author__row" *ngFor="let quote of author.quotes; let i = index">
+    {{ quote.content }}
+  </div>
+</div>

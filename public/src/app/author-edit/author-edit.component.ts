@@ -21,23 +21,35 @@ export class AuthorEditComponent implements OnInit {
   ngOnInit() {
     this._route.params.subscribe(params => {
       this.authorId = params['id'];
-      this.getAuthor();
+      this.loadAuthor();
     })
   }
 
-  getAuthor() {
+  loadAuthor() {
     this._http.getAuthor(this.authorId).subscribe(response => {
-      if (response['status'] == 200) { this.editAuthor = response['data']; } 
-      else if (response['status'] == 418) { this.errors = response['errors']; } 
-      else { return this._router.navigate(['/404']); }
+      if (response['status'] == 200) {
+        this.editAuthor = response['data'];
+      } 
+      else if (response['status'] == 418) {
+        this.errors = response['errors'];
+      }
+      else {
+        return this._router.navigate(['/404']);
+      }
     });
   }
 
   onEdit() {
     this._http.editAuthor(this.authorId, this.editAuthor).subscribe(response => {
-      if (response['status'] == 200) { this._router.navigate(['/']); } 
-      else if (response['status'] == 418) { this.errors = response['errors']; } 
-      else { return this._router.navigate(['/404']); }
+      if (response['status'] == 200) {
+        this._router.navigate(['/']);
+      } 
+      else if (response['status'] == 418) {
+        this.errors = response['errors'];
+      } 
+      else {
+        return this._router.navigate(['/404']);
+      }
     })
   }
 }
